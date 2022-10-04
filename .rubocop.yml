@@ -1,0 +1,41 @@
+require:
+  - rubocop-rails
+  - rubocop-performance
+
+AllCops:
+  Exclude:
+    - 'spec/**/*'
+    - 'Rakefile'
+    - 'bin/*'
+    - 'log/**/*'
+    - 'config/initializers/*.rb'
+    - 'config/environments/*.rb'
+    - 'config/*.rb'
+  NewCops: enable
+
+Layout/LineLength:
+  Max: 140
+
+Metrics/ClassLength:
+  Max: 200
+
+Metrics/BlockLength:
+  Max: 40
+
+Metrics/MethodLength:
+  Max: 30
+
+Metrics/AbcSize:
+  Max: 35
+
+Metrics/CyclomaticComplexity:
+  Max: 10
+
+Metrics/PerceivedComplexity:
+  Max: 10
+
+Style/Documentation:
+  Enabled: false
+
+Naming/MethodParameterName:
+  Enabled: false
