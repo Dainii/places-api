@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class CanvasController < ApplicationController
-  before_action :set_canva, only: %i[show update destroy update_canva_box]
+  before_action :set_canva, only: %i[show update destroy update_canva_boxes]
 
   # GET /canvas
   def index
@@ -20,6 +20,7 @@ class CanvasController < ApplicationController
     @canva = Canva.new(canva_params)
 
     if @canva.save
+      @canva.initialize_data
       render json: @canva, status: :created, location: @canva
     else
       render json: @canva.errors, status: :unprocessable_entity
@@ -27,8 +28,13 @@ class CanvasController < ApplicationController
   end
 
   # POST /canvas/1
-  def update_canva_box
-    @canva.update_data(params) if @canva.valid_box?(params)
+  def update_canva_boxes
+    if @canva.update_box_data(box_params)
+      @canva.broadcast_box_update(box_params)
+      render json: 'update: ok', status: :created
+    else
+      render json: @canva.errors, status: :unprocessable_entity
+    end
   end
 
   # PATCH/PUT /canvas/1
@@ -54,6 +60,11 @@ class CanvasController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def canva_params
-    params.fetch(:canva, {})
+    params.permit(:name, :height, :length)
+  end
+
+  # Only allow a list of trusted parameters through.
+  def box_params
+    params.permit(:id, :x, :y, :color)
   end
 end
